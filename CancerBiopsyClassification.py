@@ -1,4 +1,3 @@
-#Inspirit AI
 import gdown 
 import pandas as pd
 from sklearn import metrics
