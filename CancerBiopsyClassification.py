@@ -25,14 +25,13 @@ data['diagnosis'].replace({'M':1, 'B':0}, inplace = True)
 data.to_csv('cancer_data.csv')
 del data
 
-import os             # Good for navigating your computer's files 
-import numpy as np    # Great for lists (arrays) of numbers
-import pandas as pd   # Great for tables (google spreadsheets, microsoft excel, csv)
-from sklearn.metrics import accuracy_score   # Great for creating quick ML models
+import os             
+import numpy as np    
+import pandas as pd   
+from sklearn.metrics import accuracy_score   
 
 data_path  = 'cancer_data.csv'
 
-# Use the 'pd.read_csv('file')' function to read in read our data and store it in a variable called 'dataframe'
 dataframe = pd.read_csv(data_path)
 
 dataframe = dataframe[['diagnosis', 'perimeter_mean', 'radius_mean', 'texture_mean', 'area_mean', 'smoothness_mean', 'concavity_mean', 'symmetry_mean']]
@@ -42,14 +41,12 @@ dataframe.head(5)
 
 dataframe.info()
 
-# First, we'll import some handy data visualization tools
 import seaborn as sns
 import matplotlib.pyplot as plt 
 
 sns.catplot(x = 'radius_mean', y = 'diagnosis_cat', data = dataframe, order=['1 (malignant)', '0 (benign)'])
 dataframe.head()
 
-#fit and visualize a linear regression (double-click to see code!)
 from sklearn import linear_model
 
 X,y = dataframe[['radius_mean']], dataframe[['diagnosis']]
@@ -62,14 +59,13 @@ sns.scatterplot(x='radius_mean', y='diagnosis', data=dataframe)
 plt.plot(X, preds, color='r')
 plt.legend(['Linear Regression Fit', 'Data'])
 
-boundary = 15 # can be changed
+boundary = 15 
 
 sns.catplot(x = 'radius_mean', y = 'diagnosis_cat', data = dataframe, order=['1 (malignant)', '0 (benign)'])
 plt.plot([boundary, boundary], [-.2, 1.2], 'g', linewidth = 2)
 
 def boundary_classifier(target_boundary, radius_mean_series):
-  result = [] #fill this in with predictions!
-  # YOUR CODE HERE
+  result = [] 
   for i in radius_mean_series:
     if i > target_boundary:
       result.append(1)
@@ -77,7 +73,7 @@ def boundary_classifier(target_boundary, radius_mean_series):
       result.append(0)
   return result
 
-chosen_boundary = 15 #Try changing this!
+chosen_boundary = 15 
 
 y_pred = boundary_classifier(chosen_boundary, dataframe['radius_mean'])
 dataframe['predicted'] = y_pred
@@ -130,9 +126,7 @@ sns.catplot(x = X[0], y = 'diagnosis_cat', hue = 'predicted', data=test_df, orde
 accuracy = accuracy_score(y_test, y_pred)
 print(accuracy)
 
-#Plots logistic regression's soft probabilities { display-mode: "form" }
 
-# Visualize the probabilities for `X_test`
 y_prob = logreg_model.predict_proba(X_test)
 X_test_view = X_test[X].values.squeeze()
 plt.xlabel('radius_mean')
@@ -144,21 +138,19 @@ dataframe.head(1)
 X = ['area_mean']
 y = 'diagnosis'
 
-# 1. Split data into train and test
 train_df, test_df = train_test_split(dataframe, test_size = 0.2, random_state = 1)
 
-# 2. Prepare your X_train, X_test, y_train, and y_test variables by extracting the appropriate columns:
 X_train = train_df[X]
 X_test = test_df[X]
-# 3. Initialize the model object
+
 y_train = train_df[y]
 y_test = test_df[y]
-# 4. Fit the model to the training data
+
 model = linear_model.LogisticRegression()
 model.fit(X_train, y_train)
-# 5. Use this trained model to predict on the test data
+
 y_pred = model.predict(X_test)
-# 6. Evaluate the accuracy by comparing to to the test labels and print out accuracy.
+
 accuracy_score(y_test, y_pred)
 
 dataframe.head(1)
@@ -166,24 +158,17 @@ dataframe.head(1)
 ulti_X = ['area_mean', 'radius_mean', 'perimeter_mean', 'texture_mean', 'smoothness_mean', 'concavity_mean'] #Try changing this later!
 y = 'diagnosis'
 
-# 1. Split data into train and test
 train_df, test_df = train_test_split(dataframe, test_size = 0.2, random_state = 1)
 
-# 2. Prepare your X_train, X_test, y_train, and y_test variables by extracting the appropriate columns:
 X_train = train_df[multi_X]
 X_test = test_df[multi_X]
-# 3. Initialize the model object
 y_train = train_df[y]
 y_test = test_df[y]
-# 4. Fit the model to the training data
 model = linear_model.LogisticRegression()
 model.fit(X_train, y_train)
-# 5. Use this trained model to predict on the test data
 y_pred = model.predict(X_test)
-# 6. Evaluate the accuracy by comparing to to the test labels and print out accuracy.
 accuracy_score(y_test, y_pred)
 
-#Creates a confusion matrix. { display-mode: "form" }
 
 # Import the metrics class
 from sklearn import metrics
@@ -193,10 +178,9 @@ from sklearn import metrics
 cnf_matrix = metrics.confusion_matrix(y_test, y_pred)
 
 # Visualizing the Confusion Matrix
-class_names = [0,1] # Our diagnosis categories
+class_names = [0,1]
 
 fig, ax = plt.subplots()
-# Setting up and visualizing the plot (do not worry about the code below!)
 tick_marks = np.arange(len(class_names)) 
 plt.xticks(tick_marks, class_names)
 plt.yticks(tick_marks, class_names)
@@ -219,10 +203,8 @@ PPV = (tp)/(tp+fp)
 print(TPR)
 print(PPV)
 
-#Creates the model
 from sklearn import tree
 
-# We'll first specify what model we want, in this case a decision tree
 class_dt = tree.DecisionTreeClassifier(max_depth=3)
 
 # We use our previous `X_train` and `y_train` sets to build the model
